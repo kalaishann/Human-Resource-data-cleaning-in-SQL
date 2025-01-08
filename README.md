@@ -1,9 +1,13 @@
 # Human-Resource-data-cleaning-in-SQL
-
-CREATE DATABASE HR_data;
-
-USE HR_data;
-
+- First thing i should create a HR database to keep my table,view,stored procedure.
+  
+       CREATE DATABASE HR_data;
+ - In order to use that particular DB we should mention Use key followed by DB name.
+   
+       USE HR_data;
+   
+ - To view entire table.
+   
        SELECT * FROM HR_data;
 
 #### Data cleaning and preprocessing--
