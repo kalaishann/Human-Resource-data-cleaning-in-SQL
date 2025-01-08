@@ -16,20 +16,20 @@ DESCRIBE HR_data
 SET sql_safe_updates = 0;
 
 UPDATE HR_data
-SET birthdate = CASE
+     SET birthdate = CASE
 		WHEN birthdate LIKE '%/%' THEN date_format(str_to_date(birthdate,'%m/%d/%Y'),'%Y-%m-%d')
         WHEN birthdate LIKE '%-%' THEN date_format(str_to_date(birthdate,'%m-%d-%Y'),'%Y-%m-%d')
         ELSE NULL
 		END;
 	
-ALTER TABLE HR_data
+    ALTER TABLE HR_data
 MODIFY COLUMN birthdate DATE;
 
 
 -- change the data format and datatype of hire_date column
-
-UPDATE HR_data
-SET hire_date = CASE
+   
+      UPDATE HR_data
+      SET hire_date = CASE
 		WHEN hire_date LIKE '%/%' THEN date_format(str_to_date(hire_date,'%m/%d/%Y'),'%Y-%m-%d')
         WHEN hire_date LIKE '%-%' THEN date_format(str_to_date(hire_date,'%m-%d-%Y'),'%Y-%m-%d')
         ELSE NULL
