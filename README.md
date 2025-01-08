@@ -97,11 +97,11 @@
         WHEN age>=55 AND age<=64 THEN '55-64'
         ELSE '65+'
 	END AS age_group,
-        COUNT(*) AS count
-       FROM HR_data
-       WHERE termdate IS NULL
-       GROUP BY age_group
-       ORDER BY age_group;
+         COUNT(*) AS count
+         FROM HR_data
+         WHERE termdate IS NULL
+         GROUP BY age_group
+         ORDER BY age_group;
     
 - How many employees work at HQ vs remote?
 
