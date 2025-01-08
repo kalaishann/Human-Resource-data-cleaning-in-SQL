@@ -6,12 +6,12 @@ USE HR_data;
 
        SELECT * FROM HR_data;
 
--- data cleaning and preprocessing--
+#### Data cleaning and preprocessing--
 
 - Very first thing i have noticed that the first field name comes with speial character, So i want to change that to appropriate name.
   
        ALTER TABLE HR_data
-CHANGE COLUMN ï»¿id emp_id VARCHAR(20) NULL;
+       CHANGE COLUMN ï»¿id emp_id VARCHAR(20) NULL;
 
 - By using Decribe key we could view the entire table with field name and its data type.
    
@@ -19,10 +19,10 @@ CHANGE COLUMN ï»¿id emp_id VARCHAR(20) NULL;
   
 - Data field comes with two different format, I need to organize in same format, However without updating i couldn't achieve that, In MYSQL we need to set safe update=0 since it's default setting is 1.
   
-    SET sql_safe_updates = 0;
+        SET sql_safe_updates = 0;
 
-      UPDATE HR_data
-      SET birthdate = CASE
+         UPDATE HR_data
+          SET birthdate = CASE
 		WHEN birthdate LIKE '%/%' THEN date_format(str_to_date(birthdate,'%m/%d/%Y'),'%Y-%m-%d')
         WHEN birthdate LIKE '%-%' THEN date_format(str_to_date(birthdate,'%m-%d-%Y'),'%Y-%m-%d')
         ELSE NULL
@@ -34,45 +34,45 @@ CHANGE COLUMN ï»¿id emp_id VARCHAR(20) NULL;
 
 - change the data format and datatype of hire_date column
    
-      UPDATE HR_data
-      SET hire_date = CASE
+           UPDATE HR_data
+           SET hire_date = CASE
 		WHEN hire_date LIKE '%/%' THEN date_format(str_to_date(hire_date,'%m/%d/%Y'),'%Y-%m-%d')
-        WHEN hire_date LIKE '%-%' THEN date_format(str_to_date(hire_date,'%m-%d-%Y'),'%Y-%m-%d')
-        ELSE NULL
+                WHEN hire_date LIKE '%-%' THEN date_format(str_to_date(hire_date,'%m-%d-%Y'),'%Y-%m-%d')
+              ELSE NULL
 		END;
         
-      ALTER TABLE HR_data
-      MODIFY COLUMN hire_date DATE;
+           ALTER TABLE HR_data
+           MODIFY COLUMN hire_date DATE;
 
 - change the date format and datatpye of termdate column
   
-     UPDATE HR_data
-     SET termdate = date(str_to_date(termdate, '%Y-%m-%d %H:%i:%s UTC'))
-     WHERE termdate IS NOT NULL AND termdate !='';
+            UPDATE HR_data
+            SET termdate = date(str_to_date(termdate, '%Y-%m-%d %H:%i:%s UTC'))
+             WHERE termdate IS NOT NULL AND termdate !='';
 
-      UPDATE HR_data
-      SET termdate = NULL
-      WHERE termdate = '';
+            UPDATE HR_data
+            SET termdate = NULL
+            WHERE termdate = '';
 
 - create age column, we don't have age values here however we could getr that by using DOB colum.
   
-      ALTER TABLE HR_data
-      ADD column age INT;
+            ALTER TABLE HR_data
+            ADD column age INT;
 
-      UPDATE HR_data
-     SET age = timestampdiff(YEAR,birthdate,curdate())
+            UPDATE HR_data
+            SET age = timestampdiff(YEAR,birthdate,curdate())
 
-     SELECT min(age), max(age) FROM HR_data
+            SELECT min(age), max(age) FROM HR_data
   
 #### Insights:
 
 -  What is the gender breakdown of employees in the company?
-      SELECT * FROM HR_data
+        SELECT * FROM HR_data
 
-      SELECT gender, COUNT(*) AS count 
-      FROM HR_data
-      WHERE termdate IS NULL
-      GROUP BY gender;
+         SELECT gender, COUNT(*) AS count 
+         FROM HR_data
+         WHERE termdate IS NULL
+         GROUP BY gender;
 
   - What is the race breakdown of employees in the company?
   - Here we only looking for active employees so we should mention termdate is NULL.
@@ -148,8 +148,8 @@ CHANGE COLUMN ï»¿id emp_id VARCHAR(20) NULL;
 					WHEN termdate IS NOT NULL AND termdate <= curdate() THEN 1 
                     END)/COUNT(*))*100,2) AS termination_rate
 		FROM HR_data
-        GROUP BY department
-        ORDER BY termination_rate DESC;
+                GROUP BY department
+                ORDER BY termination_rate DESC;
         
         
 - What is the distribution of employees across location_state ?
@@ -165,23 +165,24 @@ CHANGE COLUMN ï»¿id emp_id VARCHAR(20) NULL;
          GROUP BY location_city;
 
 - How has the companys employee count changed over time based on hire and termination date?
-         SELECT * FROM HR_data;
+  
+              SELECT * FROM HR_data;
 
-         SELECT year,
+             SELECT year,
 		hires,
-        terminations,
-        hires-terminations AS net_change,
-        (terminations/hires)*100 AS change_percent
-	FROM(
-			SELECT YEAR(hire_date) AS year,
-            COUNT(*) AS hires,
-            SUM(CASE 
-					WHEN termdate IS NOT NULL AND termdate <= curdate() THEN 1 
-				END) AS terminations
-			FROM HR_data
-            GROUP BY YEAR(hire_date)) AS subquery
-            GROUP BY year
-            ORDER BY year;
+                terminations,
+                hires-terminations AS net_change,
+                (terminations/hires)*100 AS change_percent
+	        FROM(
+		   SELECT YEAR(hire_date) AS year,
+                   COUNT(*) AS hires,
+                   SUM(CASE 
+		            WHEN termdate IS NOT NULL AND termdate <= curdate() THEN 1 
+		            END) AS terminations
+			 FROM HR_data
+                 GROUP BY YEAR(hire_date)) AS subquery
+                 GROUP BY year
+                 ORDER BY year;
 
 - What is the tenure distribution for each dept?
   
