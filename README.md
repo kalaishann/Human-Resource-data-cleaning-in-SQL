@@ -1,5 +1,5 @@
 # Human-Resource-data-cleaning-in-SQL
-- First thing i should create a HR database to keep my table,view,stored procedure.
+- I have creatd a HR database to keep my table,view,stored procedure.
   
        CREATE DATABASE HR_data;
  - In order to use that particular DB we should mention Use key followed by DB name.
